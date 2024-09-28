@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.container {
+  margin-top: 1rem;
+  width: 100vw;
+  height: 100%;
+  background-color: #1b1b1b;
+  border-radius: 8px;
+  text-align: center;
+
+  h1 {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 2rem;
+    font-family: "Kanit", sans-serif;
+  }
+
+  button {
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &.addButton {
+      margin-top: 10px;
+      padding: 0;
+      font-size: 15px;
+      height: 40px;
+      width: 80px;
+      background-color: #138496;
+    }
+
+    &.deleteButton {
+      background-color: #dc3545;
+      margin-left: auto;
+      padding: 5px;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+
+    &.detailsToggle {
+      background-color: #17a2b8;
+      margin-left: 1rem;
+      padding: 5px;
+
+      &:hover {
+        background-color: #138496;
+      }
+    }
+  }
+}
+
+.addTask {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 5px;
+  align-items: center;
+  flex-direction: column;
+
+  .input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    color: black;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    max-width: 90vw;
+    width: 60rem;
+
+    &:focus {
+      border-color: #ffc400;
+      outline: none;
+    }
+  }
+}
+.taskifycontainer {
+  display: flex;
+  justify-content: center;
+}
+.taskList {
+  flex-direction: column;
+  width: 90vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #797979;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #666;
+  }
+}
+
+.taskItem {
+  position: relative;
+  background-color: #fff;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.3s;
+  transition: transform 0.3s ease-out;
+
+  white-space: normal;
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  span {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    width: 80vw;
+
+    &.taskDate {
+      font-size: 0.9rem;
+      color: #666;
+    }
+  }
+
+  button {
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    svg {
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+.taskDetails {
+  margin-top: 1rem;
+  background-color: #f1f1f1;
+  padding: 1rem;
+  border-radius: 6px;
+  color: #555;
+  text-align: left;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+  }
+}
+
+.optionsIcon {
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-left: auto;
+  transition: color 0.3s;
+  color: grey;
+  position: absolute;
+  right: 1%;
+  bottom: 1%;
+
+  &:hover {
+    color: #007bff;
+  }
+}
+
+.taskOptions {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background-color: white;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+   left: 1%;
+   bottom: 1%;
+ 
+
+  button {
+    margin: 5px 0;
+    width: 100%;
+  }
+}
+
+.logButton {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: rgb(5, 121, 121);
+  width: 60px;
+}
