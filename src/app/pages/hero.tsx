@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import styles from "./hero.module.scss";
 import { auth, db } from "../firebaseConfig";
-import { signOut, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -10,7 +10,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { CgDetailsMore } from "react-icons/cg";
+import { MdMoreHoriz } from "react-icons/md";
 
 interface Task {
   id: string;
@@ -36,25 +36,21 @@ const TaskItem = ({
 }) => {
   const [translateX, setTranslateX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
-  const [isVerticalSwipe, setIsVerticalSwipe] = useState(false);
 
   const swipeHandlers = useSwipeable({
     onSwiping: ({ deltaX, deltaY }) => {
-      if (Math.abs(deltaY) > Math.abs(deltaX)) {
-        setIsVerticalSwipe(true);
-        setTranslateX(0);
+      const isVerticalSwipe = Math.abs(deltaY) > Math.abs(deltaX);
+      setTranslateX(isVerticalSwipe ? 0 : deltaX);
+
+      if (!isVerticalSwipe && Math.abs(deltaX) > 100) {
+        setIsSwiping(true);
       } else {
-        if (Math.abs(deltaX) > 100) {
-          setTranslateX(deltaX);
-          setIsSwiping(true);
-        } else {
-          setTranslateX(0);
-        }
+        setTranslateX(0);
       }
     },
     onSwiped: ({ dir }) => {
       setIsSwiping(false);
-      setIsVerticalSwipe(false);
+
       if (translateX < -100 && dir === "Left") {
         onDelete();
       }
@@ -74,7 +70,7 @@ const TaskItem = ({
       }}
     >
       <span>{task.detail}</span>
-      <CgDetailsMore className={styles.optionsIcon} onClick={onToggleOptions} />
+      <MdMoreHoriz className={styles.optionsIcon} onClick={onToggleOptions} />
       {isOptionsVisible && (
         <div className={styles.taskOptions}>
           <button onClick={onToggleDetails} className={styles.detailsToggle}>
@@ -149,10 +145,13 @@ const Hero = () => {
     await deleteDoc(doc(db, `users/${auth.currentUser?.uid}/tasks`, taskId));
   };
 
-  const handleAuth = async (isLogin: boolean) => {
-    const provider = new GoogleAuthProvider();
-    if (isLogin) await signOut(auth);
-    else await signInWithPopup(auth, provider);
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("User logged out successfully");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   const toggleTaskDetails = (taskId: string) => {
@@ -200,21 +199,9 @@ const Hero = () => {
         </div>
       </div>
       <div className={styles.logBtnContainer}>
-        {auth.currentUser ? (
-          <button onClick={() => handleAuth(true)} className={styles.logButton}>
-            Logout
-          </button>
-        ) : (
-          <div>
-            <p>Please log in to Save your tasks.</p>
-            <button
-              onClick={() => handleAuth(false)}
-              className={styles.logButton}
-            >
-              Login
-            </button>
-          </div>
-        )}
+        <button onClick={handleLogout} className={styles.logButton}>
+          Logout
+        </button>
       </div>
     </div>
   );

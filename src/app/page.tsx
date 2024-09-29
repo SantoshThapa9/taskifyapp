@@ -1,11 +1,10 @@
-// Home.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth } from "./firebaseConfig"; // Ensure this path is correct
+import { auth } from "./firebaseConfig"; 
 import { useRouter } from "next/navigation";
-import Hero from "./pages/hero"; // Ensure this path is correct
-import Sidebar from "./pages/sidebar"; // Ensure this path is correct
+import Hero from "./pages/hero";
 
 const Home: React.FC = () => {
   const router = useRouter();
@@ -30,11 +29,6 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <Sidebar
-        isOpen={isOpen} // Correctly passing the prop
-        toggleSidebar={toggleSidebar} // Correctly passing the prop
-        onLogout={handleLogout} // Correctly passing the prop
-      />
       <Hero />
     </div>
   );

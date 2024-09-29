@@ -8,6 +8,7 @@ import {
 import { useRouter } from "next/navigation";
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import styles from "./login.module.scss";
+import { FirebaseError } from "firebase/app";
 
 const Login = () => {
   const router = useRouter();
@@ -16,10 +17,14 @@ const Login = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [tasks, setTasks] = useState<any[]>([]);
-
+  const [tasks, setTasks] = useState<Task[]>([]);
   const isValidEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  type Task = {
+    id: string;
+    title: string;
+  };
 
   const handleEmailAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,11 +39,8 @@ const Login = () => {
 
     try {
       if (isLogin) {
-        console.log("Attempting to log in with", email);
         await signInWithEmailAndPassword(auth, email, password);
-        console.log("User signed in successfully");
       } else {
-        console.log("Attempting to sign up with", email);
         const { user } = await createUserWithEmailAndPassword(
           auth,
           email,
@@ -48,10 +50,8 @@ const Login = () => {
       }
       router.push("/");
     } catch (error) {
-      console.error("Error during authentication:", error);
-      const firebaseError = error as { code?: string };
-      if (firebaseError.code) {
-        setError(getErrorMessage(firebaseError.code));
+      if (error instanceof FirebaseError) {
+        setError(getErrorMessage(error.code));
       } else {
         setError("An unexpected error occurred.");
       }
@@ -73,7 +73,6 @@ const Login = () => {
       "auth/weak-password":
         "The password is too weak. Please choose a stronger password.",
     };
-
     return (
       errorMessages[errorCode] || "Authentication failed. Please try again."
     );
@@ -83,23 +82,27 @@ const Login = () => {
     try {
       const tasksRef = collection(db, "users", userId, "tasks");
       const taskSnapshot = await getDocs(tasksRef);
-      setTasks(taskSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      setTasks(
+        taskSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Task))
+      );
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
   };
 
   useEffect(() => {
-  
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         await fetchUserTasks(user.uid);
         router.push("/");
+      } else {
+        console.log("User not authenticated.");
       }
     });
 
     return () => unsubscribe();
   }, [router]);
+
   const [flip, setFlip] = useState(false);
 
   const handleToggle = () => {
@@ -109,6 +112,7 @@ const Login = () => {
       setFlip(false);
     }, 300);
   };
+
   return (
     <div
       className={`${styles.loginPage} ${
