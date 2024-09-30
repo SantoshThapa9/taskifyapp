@@ -7,9 +7,8 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
-import styles from "./login.module.scss";
+import styles from "../styles/login.module.scss";
 import { FirebaseError } from "firebase/app";
-
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");

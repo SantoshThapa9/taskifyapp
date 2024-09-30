@@ -1,10 +1,10 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth } from "./firebaseConfig"; 
+import { auth } from "./firebaseConfig";
 import { useRouter } from "next/navigation";
 import Hero from "./pages/hero";
+import Sidebar from "./components/sidebar";
 
 const Home: React.FC = () => {
   const router = useRouter();
@@ -29,6 +29,11 @@ const Home: React.FC = () => {
 
   return (
     <div>
+      <Sidebar
+        isOpen={isOpen}
+        toggleSidebar={toggleSidebar}
+        handleLogout={handleLogout}
+      />{" "}
       <Hero />
     </div>
   );

@@ -1,0 +1,123 @@
+.aboutContainer {
+  background: linear-gradient(45deg, #ff6f61, #ff6bd9, #7ae7c7, #5b7ff0);
+  background-size: 400% 400%;
+  animation: gradientAnimation 10s ease infinite;
+  min-height: 100vh;
+  padding: 4rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.hero {
+  margin-bottom: 3rem;
+  animation: fadeIn 2s ease;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 900;
+  background: linear-gradient(to right, #fff, #ff6f61);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: textGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 10px #ff6f61, 0 0 20px #ff6f61, 0 0 30px #ff6bd9;
+  }
+  to {
+    text-shadow: 0 0 20px #7ae7c7, 0 0 30px #5b7ff0, 0 0 40px #ff6bd9;
+  }
+}
+
+.tagline {
+  font-size: 1.5rem;
+  opacity: 0.85;
+}
+
+.section {
+  margin: 2rem 0;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1.5s ease forwards;
+  animation-delay: 1s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.heading {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.paragraph {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+}
+
+.listItemNumber {
+  background: linear-gradient(45deg, #ff6f61, #ff6bd9);
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+}
+
+.link {
+  color: #ffffff;
+  text-decoration: underline;
+  &:hover {
+    color: #ff6bd9;
+  }
+}
+

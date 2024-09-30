@@ -22,7 +22,6 @@ body {
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
-   scrollbar-width: thin;
 }
 
 @layer utilities {
@@ -31,10 +30,8 @@ body {
   }
 }
 
-
 ::-webkit-scrollbar-thumb {
   background-color: #888;
-  border-radius: 50px;
 }
 
 ::-webkit-scrollbar-track {

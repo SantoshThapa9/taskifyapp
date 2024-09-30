@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
-import styles from "./hero.module.scss";
+import styles from "../styles/hero.module.scss";
 import { auth, db } from "../firebaseConfig";
-import { signOut } from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -145,15 +144,6 @@ const Hero = () => {
     await deleteDoc(doc(db, `users/${auth.currentUser?.uid}/tasks`, taskId));
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      console.log("User logged out successfully");
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-  };
-
   const toggleTaskDetails = (taskId: string) => {
     setTaskDetailsVisible((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
   };
@@ -197,11 +187,6 @@ const Hero = () => {
             ))
           )}
         </div>
-      </div>
-      <div className={styles.logBtnContainer}>
-        <button onClick={handleLogout} className={styles.logButton}>
-          Logout
-        </button>
       </div>
     </div>
   );
