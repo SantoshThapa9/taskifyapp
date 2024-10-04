@@ -1,6 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
-import styles from "../styles/hero.module.scss";
 import { auth, db } from "../firebaseConfig";
 import {
   collection,
@@ -10,6 +11,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { MdMoreHoriz } from "react-icons/md";
+import styles from "../styles/taskify.module.scss";
 
 interface Task {
   id: string;
@@ -35,7 +37,6 @@ const TaskItem = ({
 }) => {
   const [translateX, setTranslateX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
-
   const swipeHandlers = useSwipeable({
     onSwiping: ({ deltaX, deltaY }) => {
       const isVerticalSwipe = Math.abs(deltaY) > Math.abs(deltaX);
@@ -89,7 +90,7 @@ const TaskItem = ({
   );
 };
 
-const Hero = () => {
+const Taskify = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [taskDetail, setTaskDetail] = useState<string>("");
   const [taskDetailsVisible, setTaskDetailsVisible] = useState<{
@@ -98,6 +99,7 @@ const Hero = () => {
   const [taskOptionsVisible, setTaskOptionsVisible] = useState<{
     [key: string]: boolean;
   }>({});
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -121,9 +123,16 @@ const Hero = () => {
   }, []);
 
   const addTask = async () => {
-    if (!taskDetail.trim()) return;
+    if (!taskDetail.trim()) {
+      setError("Please Enter Task Details!");
+      return;
+    }
     const userId = auth.currentUser?.uid;
-    if (!userId) return;
+    if (!userId) {
+      setError("Please Sign to Add Tasks");
+      return;
+    }
+
     const newTask: Omit<Task, "id"> = {
       detail: taskDetail,
       createdAt: new Date().toLocaleString("en-US", {
@@ -136,6 +145,7 @@ const Hero = () => {
       }),
       userId,
     };
+    setError(" ");
     await addDoc(collection(db, `users/${userId}/tasks`), newTask);
     setTaskDetail("");
   };
@@ -143,19 +153,16 @@ const Hero = () => {
   const deleteTask = async (taskId: string) => {
     await deleteDoc(doc(db, `users/${auth.currentUser?.uid}/tasks`, taskId));
   };
-
-  const toggleTaskDetails = (taskId: string) => {
-    setTaskDetailsVisible((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
-  };
-
   const toggleTaskOptions = (taskId: string) => {
     setTaskOptionsVisible((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
+  };
+  const toggleTaskDetails = (taskId: string) => {
+    setTaskDetailsVisible((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
   };
 
   return (
     <div className={styles.container}>
       <h1>Taskify</h1>
-
       <div className={styles.addTask}>
         <input
           type="text"
@@ -170,6 +177,7 @@ const Hero = () => {
       </div>
       <div className={styles.taskifycontainer}>
         <div className={styles.taskList}>
+          <p className={styles.errorMessage}>{error}</p>
           <h3>Task List</h3>
           {tasks.length === 0 ? (
             <p>No tasks available</p>
@@ -179,10 +187,13 @@ const Hero = () => {
                 key={task.id}
                 task={task}
                 onDelete={() => deleteTask(task.id)}
-                onToggleDetails={() => toggleTaskDetails(task.id)}
                 onToggleOptions={() => toggleTaskOptions(task.id)}
-                isDetailsVisible={taskDetailsVisible[task.id] || false}
+                onToggleDetails={() => {
+                  toggleTaskDetails(task.id);
+                  toggleTaskOptions(task.id);
+                }}
                 isOptionsVisible={taskOptionsVisible[task.id] || false}
+                isDetailsVisible={taskDetailsVisible[task.id] || false}
               />
             ))
           )}
@@ -192,4 +203,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default Taskify;

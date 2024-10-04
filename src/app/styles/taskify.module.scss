@@ -2,8 +2,7 @@
 
 .container {
   width: 100vw;
-  height: 100%;
-  background-color: #1b1b1b;
+  height: 130svh;
   border-radius: 8px;
   text-align: center;
 
@@ -27,9 +26,10 @@
       margin-top: 10px;
       padding: 0;
       font-size: 15px;
-      height: 40px;
+      height: 30px;
       width: 80px;
-      background: linear-gradient(gold, orange);
+      background: linear-gradient(180deg, #241f30, #262133);
+      border: 1px rgb(167, 167, 167) solid;
       &:hover {
         color: whitesmoke;
         scale: 1.1;
@@ -71,14 +71,14 @@
     padding: 0.75rem;
     border: 2px solid #ddd;
     color: black;
+    background-color: rgb(231, 231, 231);
     border-radius: 6px;
     font-size: 1rem;
-    transition: border-color 0.3s;
-    max-width: 90vw;
+    max-width: 80vw;
     width: 60rem;
 
     &:focus {
-      border-color: #ffc400;
+      box-shadow: 0 0 10px rgb(54, 35, 75);
       outline: none;
     }
   }
@@ -89,10 +89,13 @@
 }
 .taskList {
   flex-direction: column;
-  width: 90vw;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .errorMessage {
+    color: rgb(148, 0, 0);
+  }
   h3 {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
@@ -108,7 +111,7 @@
 .taskItem {
   position: relative;
   background-color: #fff;
-  padding: 1.5rem;
+  padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -117,7 +120,7 @@
   align-items: flex-start;
   transition: box-shadow 0.3s;
   transition: transform 0.3s ease-out;
-
+  width: 90svw;
   white-space: normal;
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -129,7 +132,7 @@
     margin-bottom: 0.5rem;
     overflow-wrap: break-word;
     word-wrap: break-word;
-    width: 80vw;
+    width: 90svw;
 
     &.taskDate {
       font-size: 0.9rem;
@@ -173,6 +176,7 @@
   position: absolute;
   right: 1%;
   bottom: 0;
+  user-select: none;
 
   &:hover {
     color: #007bff;
