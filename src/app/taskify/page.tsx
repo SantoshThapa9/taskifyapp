@@ -92,6 +92,7 @@ const TaskItem = ({
 
 const Taskify = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [taskDetail, setTaskDetail] = useState<string>("");
   const [taskDetailsVisible, setTaskDetailsVisible] = useState<{
     [key: string]: boolean;
@@ -112,6 +113,7 @@ const Taskify = () => {
               ...(doc.data() as Omit<Task, "id">),
             }))
           );
+          setLoading(false);
         });
         return () => unsubscribeTasks();
       } else {
@@ -176,28 +178,32 @@ const Taskify = () => {
         </button>
       </div>
       <div className={styles.taskifycontainer}>
-        <div className={styles.taskList}>
-          <p className={styles.errorMessage}>{error}</p>
-          <h3>Task List</h3>
-          {tasks.length === 0 ? (
-            <p>No tasks available</p>
-          ) : (
-            tasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                onDelete={() => deleteTask(task.id)}
-                onToggleOptions={() => toggleTaskOptions(task.id)}
-                onToggleDetails={() => {
-                  toggleTaskDetails(task.id);
-                  toggleTaskOptions(task.id);
-                }}
-                isOptionsVisible={taskOptionsVisible[task.id] || false}
-                isDetailsVisible={taskDetailsVisible[task.id] || false}
-              />
-            ))
-          )}
-        </div>
+        {loading ? (
+          <span className={styles.loader}></span>
+        ) : (
+          <div className={styles.taskList}>
+            <p className={styles.errorMessage}>{error}</p>
+            <h3>Task List</h3>
+            {tasks.length === 0 ? (
+              <p>No tasks available</p>
+            ) : (
+              tasks.map((task) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  onDelete={() => deleteTask(task.id)}
+                  onToggleOptions={() => toggleTaskOptions(task.id)}
+                  onToggleDetails={() => {
+                    toggleTaskDetails(task.id);
+                    toggleTaskOptions(task.id);
+                  }}
+                  isOptionsVisible={taskOptionsVisible[task.id] || false}
+                  isDetailsVisible={taskDetailsVisible[task.id] || false}
+                />
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
