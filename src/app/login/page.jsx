@@ -7,15 +7,17 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import styles from "../styles/login.module.scss";
+import { PiEyeLight } from "react-icons/pi";
+import { PiEyeSlashBold } from "react-icons/pi";
 const Login = () => {
   const router = useRouter();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isLogin, setIsLogin] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [userEmail, setUserEmail] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [flip, setFlip] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const handleToggle = () => {
     setFlip(true);
     setTimeout(() => {
@@ -23,7 +25,8 @@ const Login = () => {
       setFlip(false);
     }, 300);
   };
-  const handleEmailAuth = async (event: React.FormEvent) => {
+
+  const handleEmailAuth = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError("");
@@ -35,13 +38,14 @@ const Login = () => {
         await createUserWithEmailAndPassword(auth, email, password);
       }
       router.push("/");
-    } catch (error: any) {
+    } catch (error) {
       console.log("Error code:", error.code);
       setError("Invalid username or password.");
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user && user.email) {
@@ -62,6 +66,7 @@ const Login = () => {
     >
       <div className={`${styles.container} ${flip ? styles.flip : ""}`}>
         <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+        <h3>{isLogin ? "Welcome back!" : "Create Your Account"}</h3>
         <form onSubmit={handleEmailAuth}>
           <input
             placeholder="Email..."
@@ -70,13 +75,22 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
-            placeholder={isLogin ? "Password..." : "Set Password..."}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className={styles.passwordContainer}>
+            <input
+              placeholder={isLogin ? "Password..." : "Set Password..."}
+              type={showPassword ? "text" : "password"} // Toggle password visibility
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className={styles.eyeButton}
+            >
+              {showPassword ? <PiEyeLight /> : <PiEyeSlashBold />}{" "}
+            </button>
+          </div>
           <button type="submit" disabled={loading}>
             {loading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
           </button>

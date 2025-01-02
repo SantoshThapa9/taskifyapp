@@ -1,0 +1,28 @@
+:root {
+  --text-color: #ffffff;
+  --text-color2: #e7e7e7;
+  --background-color: #222222;
+  --background-color2: #444444;
+  --hover-background: #4e4e4e;
+  --border-color: rgb(95, 95, 95);
+}
+
+[data-theme="dark"] {
+  --text-color: #222222;
+  --text-color2: #444444;
+  --background-color: #ffffff;
+  --background-color2: #e6e6e6;
+  --hover-background: #dadada;
+  --border-color: rgb(233, 233, 233);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "Anton";
+  src: url("/assets/fonts/Anton-Regular.ttf") format("truetype");
+}

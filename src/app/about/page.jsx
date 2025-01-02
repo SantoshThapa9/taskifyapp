@@ -2,7 +2,7 @@
 import React from "react";
 import styles from "../styles/about.module.scss";
 
-const About: React.FC = () => {
+const About = () => {
   return (
     <div className={styles.aboutContainer}>
       <h1 className={styles.title}>Welcome to Taskify</h1>
@@ -47,8 +47,7 @@ const About: React.FC = () => {
           <li className={styles.listItem}>
             <span className={styles.listItemNumber}>5</span>
             <span className={styles.dialog}>
-              {" "}
-              You can also view the creation date and time of each task{" "}
+              You can also view the creation date and time of each task
             </span>
           </li>
         </ul>
@@ -58,10 +57,13 @@ const About: React.FC = () => {
         <h2 className={styles.heading}>Get Started Today!</h2>
         <p className={styles.paragraph}>
           Taskify is free to use. Start managing your tasks today! If you have
-          any feedback, feel free to contact me at
-          <a href="mailto:st8493510@gmail.com" className={styles.link}>
-            {" "}
-            st8493510@gmail.com
+          any feedback, feel free to contact me at {""}
+          <a
+            target="_blank"
+            href="https://santosh-gamma.vercel.app/"
+            className={styles.link}
+          >
+            Personal Portfolio
           </a>
           .
         </p>

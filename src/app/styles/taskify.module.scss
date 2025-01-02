@@ -3,8 +3,9 @@
 .container {
   width: 100svw;
   height: 130svh;
-  border-radius: 8px;
   text-align: center;
+  background-color: var(--background-color);
+  transition: all 0.3s;
 
   h1 {
     font-size: 2.5rem;
@@ -12,6 +13,7 @@
     padding-top: 10px;
     margin-bottom: 2rem;
     font-family: "Kanit", sans-serif;
+    color: var(--text-color);
   }
 
   button {
@@ -20,7 +22,7 @@
     border-radius: 6px;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
 
     &.addButton {
       margin-top: 10px;
@@ -28,7 +30,7 @@
       font-size: 15px;
       height: 30px;
       width: 80px;
-      background: linear-gradient(180deg, #241f30, #262133);
+      background: linear-gradient(80deg, #df5900, #ffb120);
       border: 1px rgb(167, 167, 167) solid;
       &:hover {
         color: whitesmoke;
@@ -68,9 +70,10 @@
   .input {
     flex: 1;
     padding: 0.75rem;
-    border: 2px solid #ddd;
-    color: black;
-    background-color: rgb(231, 231, 231);
+    border: 2px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: all 0.3s;
     border-radius: 6px;
     font-size: 1rem;
     max-width: 80vw;
@@ -93,7 +96,7 @@
   align-items: center;
 
   .errorMessage {
-    color: rgb(148, 0, 0);
+    color: rgb(240, 0, 0);
   }
   h3 {
     font-size: 1.8rem;
@@ -109,17 +112,15 @@
 
 .taskItem {
   position: relative;
-  background-color: #fff;
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--background-color2);
+  transition: all 0.3s ease !important;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  transition: box-shadow 0.3s;
-  transition: transform 0.3s ease-out;
-  width: 90svw;
+  width: 90vw;
   white-space: normal;
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -127,14 +128,14 @@
 
   span {
     font-size: 1.1rem;
-    color: #333;
+    color: var(--text-color);
+    transition: all 0.3s;
     margin-bottom: 0.5rem;
     overflow-wrap: break-word;
     word-wrap: break-word;
-    width: 90svw;
-
+    width: 100%;
+    font-family: "Kanit", serif;
     &.taskDate {
-      font-size: 0.9rem;
       color: #666;
     }
   }
@@ -153,16 +154,15 @@
 
 .taskDetails {
   margin-top: 1rem;
-  background-color: #f1f1f1;
+  background-color: var(--background-color);
   padding: 1rem;
   border-radius: 6px;
-  color: #555;
   text-align: left;
 
   p {
     margin: 0;
     font-size: 0.9rem;
-    color: #333;
+    color: var(--text-color2);
   }
 }
 
@@ -216,7 +216,8 @@
   display: block;
   margin: 15px auto;
   position: relative;
-  color: #fff;
+  color: var(--text-color);
+
   box-sizing: border-box;
   animation: animloader 2s linear infinite;
 }

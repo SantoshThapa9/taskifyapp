@@ -13,13 +13,6 @@ import {
 import { MdMoreHoriz } from "react-icons/md";
 import styles from "../styles/taskify.module.scss";
 
-interface Task {
-  id: string;
-  detail: string;
-  createdAt: string;
-  userId: string;
-}
-
 const TaskItem = ({
   task,
   onDelete,
@@ -27,13 +20,6 @@ const TaskItem = ({
   onToggleOptions,
   isDetailsVisible,
   isOptionsVisible,
-}: {
-  task: Task;
-  onDelete: () => void;
-  onToggleDetails: () => void;
-  onToggleOptions: () => void;
-  isDetailsVisible: boolean;
-  isOptionsVisible: boolean;
 }) => {
   const [translateX, setTranslateX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
@@ -91,16 +77,12 @@ const TaskItem = ({
 };
 
 const Taskify = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [taskDetail, setTaskDetail] = useState<string>("");
-  const [taskDetailsVisible, setTaskDetailsVisible] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [taskOptionsVisible, setTaskOptionsVisible] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [error, setError] = useState<string>("");
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [taskDetail, setTaskDetail] = useState("");
+  const [taskDetailsVisible, setTaskDetailsVisible] = useState({});
+  const [taskOptionsVisible, setTaskOptionsVisible] = useState({});
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -110,7 +92,7 @@ const Taskify = () => {
           setTasks(
             snapshot.docs.map((doc) => ({
               id: doc.id,
-              ...(doc.data() as Omit<Task, "id">),
+              ...doc.data(),
             }))
           );
           setLoading(false);
@@ -118,6 +100,7 @@ const Taskify = () => {
         return () => unsubscribeTasks();
       } else {
         setTasks([]);
+        setLoading(false);
       }
     });
 
@@ -131,11 +114,11 @@ const Taskify = () => {
     }
     const userId = auth.currentUser?.uid;
     if (!userId) {
-      setError("Please Sign to Add Tasks");
+      setError("Please Sign-in to Add Tasks");
       return;
     }
 
-    const newTask: Omit<Task, "id"> = {
+    const newTask = {
       detail: taskDetail,
       createdAt: new Date().toLocaleString("en-US", {
         hour: "numeric",
@@ -152,13 +135,15 @@ const Taskify = () => {
     setTaskDetail("");
   };
 
-  const deleteTask = async (taskId: string) => {
+  const deleteTask = async (taskId) => {
     await deleteDoc(doc(db, `users/${auth.currentUser?.uid}/tasks`, taskId));
   };
-  const toggleTaskOptions = (taskId: string) => {
+
+  const toggleTaskOptions = (taskId) => {
     setTaskOptionsVisible((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
   };
-  const toggleTaskDetails = (taskId: string) => {
+
+  const toggleTaskDetails = (taskId) => {
     setTaskDetailsVisible((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
   };
 
