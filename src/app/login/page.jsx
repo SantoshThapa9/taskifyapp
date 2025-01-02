@@ -46,18 +46,6 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user && user.email) {
-        setUserEmail(user.email);
-      } else {
-        setUserEmail("");
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   return (
     <div
       className={`${styles.loginPage} ${
