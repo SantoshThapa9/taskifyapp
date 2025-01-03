@@ -9,6 +9,7 @@
   background-color: var(--background-color2);
   color: var(--text-color);
   transition: all 0.3s;
+  border: 5px solid var(--background-color);
 
   &.open {
     right: 0;
@@ -64,6 +65,7 @@
       transition: all 0.3s;
       &:hover {
         background-color: var(--hover-background);
+        font-weight: bold;
       }
     }
   }
