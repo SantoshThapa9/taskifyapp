@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import styles from "../styles/login.module.scss";
 import { PiEyeLight } from "react-icons/pi";
 import { PiEyeSlashBold } from "react-icons/pi";
+
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -62,11 +63,12 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="email"
           />
           <div className={styles.passwordContainer}>
             <input
               placeholder={isLogin ? "Password..." : "Set Password..."}
-              type={showPassword ? "text" : "password"} // Toggle password visibility
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

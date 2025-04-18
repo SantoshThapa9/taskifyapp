@@ -3,45 +3,35 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "../styles/sidebar.module.scss";
 import { IoMdMore, IoMdClose } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
-import Link from "next/link";
 import { auth } from "../firebaseConfig";
-import { useRouter } from "next/navigation";
-import "../global.scss";
+import { useTheme } from "../hook/ThemeContext";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const [theme, setTheme] = useState("light");
-  const router = useRouter();
   const sidebarRef = useRef(null);
+  const { theme, setTheme } = useTheme(null);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
   };
   const closeSidebar = (event) => {
-    // Check if the click was outside the sidebar
     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
       setIsOpen(false);
     }
   };
   useEffect(() => {
-    document.addEventListener("mousedown", closeSidebar); // Listen for mouse click on document
+    document.addEventListener("mousedown", closeSidebar);
     return () => {
-      document.removeEventListener("mousedown", closeSidebar); // Cleanup on unmount
+      document.removeEventListener("mousedown", closeSidebar);
     };
   }, []);
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-    document.documentElement.setAttribute("data-theme", savedTheme);
-  }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user?.email) {
@@ -58,7 +48,6 @@ const Sidebar = () => {
   const handleLogout = async () => {
     await auth.signOut();
     setIsUserLoggedIn(false);
-    router.push("/login");
   };
 
   return (
@@ -73,23 +62,26 @@ const Sidebar = () => {
       </div>
 
       <span className={styles.userEmail}>
-        {" "}
-        {isUserLoggedIn ? `Hi, ${userEmail}` : "Hi, Guest"}{" "}
+        {isUserLoggedIn ? `Hi, ${userEmail}` : "Hi, Guest"}
       </span>
 
       <ul className={styles.sidebarList}>
         <li className={styles.sidebarItem}>
-          <Link href="/taskify">Home</Link>
+          <a href="/taskify">Home</a>
         </li>
-        <li className={styles.sidebarItem}>
-          <Link href="/about">About</Link>
+        <li className={styles.sidebarItem} onClick={() => setIsOpen(false)}>
+          <a href="/about">About</a>
         </li>
-        <li
+        <a
+          href="/login"
           className={styles.sidebarItem}
-          onClick={isUserLoggedIn ? handleLogout : () => router.push("/login")}
+          onClick={() => {
+            handleLogout();
+            setIsOpen(false);
+          }}
         >
           {isUserLoggedIn ? "Logout" : "Sign In"}
-        </li>
+        </a>
         <li className={styles.sidebarItem} onClick={toggleTheme}>
           {theme === "light" ? <MdDarkMode /> : <MdLightMode />} Theme
         </li>

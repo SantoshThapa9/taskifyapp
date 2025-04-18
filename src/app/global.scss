@@ -1,28 +1,51 @@
-:root {
+.dark {
   --text-color: #ffffff;
   --text-color2: #e7e7e7;
-  --background-color: #222222;
+  --background-color: #212121;
   --background-color2: #444444;
+  --text-ctn: #303030;
+  --code-nav: rgb(48, 48, 48);
   --hover-background: #4e4e4e;
-  --border-color: rgb(95, 95, 95);
+  --border-color: 1px solid rgb(116, 116, 116);
+  --accent-color: #6c63ff;
+  --input-bg: #4d4d4d;
+  --button-hover: #5a52e6;
+  --invert-filter: invert(1);
+  --box-shadow: 0px 4px 9px rgba(80, 80, 80, 0.397);
+  --codeBg: rgb(19, 19, 19);
+  --user-msg: rgb(49, 49, 49);
+  --more-Ctn: rgb(48, 48, 48);
+  --more-shadow: 0px 6px 9px 1px rgba(31, 31, 31, 0.26);
+  --more-active: rgb(43, 43, 43);
+  --img-loading-bg: rgb(43, 43, 43);
 }
 
-[data-theme="dark"] {
+.light {
   --text-color: #222222;
   --text-color2: #444444;
-  --background-color: #ffffff;
-  --background-color2: #e6e6e6;
+  --background-color: #ffff;
+  --background-color2: #f3f3f3;
+  --code-nav: #ffff;
   --hover-background: #dadada;
-  --border-color: rgb(233, 233, 233);
+  --border-color: 1px solid rgba(207, 207, 207, 0.747);
+  --accent-color: #4f46e5;
+  --input-bg: #e0e0e0;
+  --text-ctn: #ffff;
+  --invert-filter: invert(0);
+  --box-shadow: 0px 3px 5px rgba(228, 228, 228, 0.829);
+  --codeBg: rgba(235, 235, 235, 0.322);
+  --user-msg: rgb(243, 243, 243);
+  --more-Ctn: rgb(255, 255, 255);
+  --more-shadow: 0px 3px 6px 1px rgba(43, 43, 43, 0.089);
+  --more-active: rgb(224, 224, 224);
+  --img-loading-bg: rgb(240, 240, 240);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-@font-face {
-  font-family: "Anton";
-  src: url("/assets/fonts/Anton-Regular.ttf") format("truetype");
+  transition: color 0.6s ease, background-color 0.6s ease, box-shadow 0.6s ease,
+    border-color 0.6s ease;
+  scroll-behavior: smooth;
 }
