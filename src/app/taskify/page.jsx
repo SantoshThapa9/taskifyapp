@@ -149,7 +149,16 @@ const Taskify = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Taskify</h1>
+      <header>
+        <h1>Taskify</h1>
+        <h2 className={styles.seoHeading}>
+          Taskify - Boost Your Productivity with Smart Task Management
+        </h2>
+        <h3 className={styles.seoHeading}>
+          Taskify is a powerful task management app to boost productivity, track
+          tasks, and plan effortlessly. Developed by Santosh Thapa.
+        </h3>
+      </header>
       <div className={styles.addTask}>
         <input
           type="text"
