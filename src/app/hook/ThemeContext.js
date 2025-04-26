@@ -10,7 +10,7 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("theme");
-      const initialTheme = themes.includes(stored) ? stored : "Maroon";
+      const initialTheme = themes.includes(stored) ? stored : "Peach";
       setTheme(initialTheme);
       document.documentElement.classList.add(initialTheme);
     }
