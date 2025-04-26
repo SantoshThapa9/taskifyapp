@@ -41,15 +41,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      input {
+      .input {
         width: 90%;
         padding: 15px;
         margin: 12px 0;
         border: 1px solid var(--text-color);
         border-radius: 10px;
-        transition: all 0.2s ease-in-out;
         font-size: 1rem;
-        background-color: var(--background-color);
+        background-color: var(--background-color) !important;
         color: var(--text-color);
         z-index: 1;
         &:focus {

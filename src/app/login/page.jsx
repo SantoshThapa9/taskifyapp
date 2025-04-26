@@ -64,6 +64,7 @@ const Login = () => {
           <input
             placeholder="Email..."
             type="email"
+            className={styles.input}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -77,7 +78,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className={styles.passInputCtn}
+              className={`${styles.passInputCtn} ${styles.input}`}
             />
             <button
               type="button"
