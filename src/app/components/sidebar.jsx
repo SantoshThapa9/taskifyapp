@@ -2,20 +2,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from "../styles/sidebar.module.scss";
 import { IoMdMore, IoMdClose } from "react-icons/io";
-import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { auth } from "../firebaseConfig";
 import { useTheme } from "../hook/ThemeContext";
-
+import Link from "next/link";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const sidebarRef = useRef(null);
-  const { theme, setTheme } = useTheme(null);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  const { theme, toggleTheme } = useTheme();
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -33,16 +28,16 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const getData = auth.onAuthStateChanged((user) => {
       if (user?.email) {
         setUserEmail(user.email);
         setIsUserLoggedIn(true);
       } else {
-        setUserEmail("");
+        setUserEmail("Guest");
         setIsUserLoggedIn(false);
       }
     });
-    return () => unsubscribe();
+    return () => getData();
   }, []);
 
   const handleLogout = async () => {
@@ -51,42 +46,40 @@ const Sidebar = () => {
   };
 
   return (
-    <div
+    <aside
       ref={sidebarRef}
-      className={`${styles.sidebar} ${isOpen ? styles.open : ""} ${
-        theme === "dark" ? styles.dark : styles.light
-      }`}
+      className={`${styles.sidebar} ${isOpen ? styles.open : ""} `}
     >
-      <div className={styles.toggleBtn} onClick={toggleSidebar}>
-        {isOpen ? <IoMdClose /> : <IoMdMore />}
+      <div className={styles.box1}>
+        <div className={styles.toggleBtn} onClick={toggleSidebar}>
+          {isOpen ? <IoMdClose /> : <IoMdMore />}
+        </div>
+
+        <span className={styles.userEmail}>{userEmail}</span>
       </div>
 
-      <span className={styles.userEmail}>
-        {isUserLoggedIn ? `Hi, ${userEmail}` : "Hi, Guest"}
-      </span>
+      <div className={styles.box2}>
+        <Link onClick={() => setIsOpen(false)} href="/">
+          Home
+        </Link>
 
-      <ul className={styles.sidebarList}>
-        <li className={styles.sidebarItem}>
-          <a href="/taskify">Home</a>
-        </li>
-        <li className={styles.sidebarItem} onClick={() => setIsOpen(false)}>
-          <a href="/about">About</a>
-        </li>
-        <a
+        <Link href="/about" onClick={() => setIsOpen(false)}>
+          About
+        </Link>
+
+        <Link
           href="/login"
-          className={styles.sidebarItem}
           onClick={() => {
             handleLogout();
             setIsOpen(false);
           }}
         >
           {isUserLoggedIn ? "Logout" : "Sign In"}
-        </a>
-        <li className={styles.sidebarItem} onClick={toggleTheme}>
-          {theme === "light" ? <MdDarkMode /> : <MdLightMode />} Theme
-        </li>
-      </ul>
-    </div>
+        </Link>
+
+        <button onClick={toggleTheme}>Theme: {theme}</button>
+      </div>
+    </aside>
   );
 };
 

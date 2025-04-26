@@ -1,6 +1,6 @@
 import "./global.scss";
-import Sidebar from "./components/sidebar";
 import { ThemeProvider } from "./hook/ThemeContext";
+import Sidebar from "./components/sidebar";
 
 const description =
   "Taskify - Smart task management app to boost productivity. Track & plan effortlessly. Created by Santosh Thapa.";

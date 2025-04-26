@@ -1,74 +1,129 @@
 "use client";
-import React from "react";
+
 import styles from "../styles/about.module.scss";
+import Link from "next/link";
 
 const About = () => {
   return (
-    <div className={styles.aboutContainer}>
-      <h1 className={styles.title}>Welcome to Taskify</h1>
-      <p className={styles.tagline}>
-        A simple task manager to help you stay organized and productive.
-      </p>
+    <main className={styles.body}>
+      <div className={styles.aboutPage}>
+        <section className={styles.hero}>
+          <h1>Welcome to Taskify </h1>
+          <p>
+            Your comprehensive solution for effective task management and
+            enhanced productivity.
+          </p>
+          <div className={styles.ctaButtons}>
+            <Link href="/">Home</Link>
+            <Link href="/login">Login</Link>
+          </div>
+        </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.heading}>Why I Created Taskify</h2>
-        <p className={styles.paragraph}>
-          I wanted to build a task manager that is clean, simple, and easy to
-          use. Taskify is all about helping you focus on your tasks without any
-          distractions.
-        </p>
-      </section>
+        <section className={styles.section}>
+          <h2> Why Taskify?</h2>
+          <p>
+            In todays dynamic environment, staying organized and on top of
+            tasks is crucial. Taskify provides a robust, intuitive, and
+            efficient platform to track your daily tasks, manage complex
+            projects, and achieve your life goals. Leveraging modern
+            technologies such as Next.js, Firebase, and React, Taskify
+            guarantees exceptional performance, security, and scalability.
+          </p>
+        </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.heading}>How Taskify Works</h2>
-        <ul className={styles.list}>
-          <li className={styles.listItem}>
-            <span className={styles.listItemNumber}>1</span>
-            <span className={styles.dialog}>
-              Sign in to start managing your tasks.
-            </span>
-          </li>
-          <li className={styles.listItem}>
-            <span className={styles.listItemNumber}>2</span>
-            <span className={styles.dialog}>Add tasks quickly and easily.</span>
-          </li>
-          <li className={styles.listItem}>
-            <span className={styles.listItemNumber}>3</span>
-            <span className={styles.dialog}>
-              Swipe through your tasks and manage them effortlessly.
-            </span>
-          </li>
-          <li className={styles.listItem}>
-            <span className={styles.listItemNumber}>4</span>
-            <span className={styles.dialog}>
-              Sync your tasks across all your devices instantly.
-            </span>
-          </li>
-          <li className={styles.listItem}>
-            <span className={styles.listItemNumber}>5</span>
-            <span className={styles.dialog}>
-              You can also view the creation date and time of each task
-            </span>
-          </li>
-        </ul>
-      </section>
+        <section className={styles.section}>
+          <h2>🚀 Key Features of Taskify</h2>
+          <ul>
+            <li>📝 Quick and Seamless Task Creation with Smart Auto-Save</li>
+            <li>
+              🔄 Real-Time Sync and Instant Updates via Firebase Firestore
+            </li>
+            <li>
+              ✏️ Edit, Update, and Manage Tasks Effortlessly with Inline Editing
+            </li>
+            <li>🗑️ Single or Bulk Task Deletion with Safety Confirmations</li>
+            <li>
+              📋 Toggle Between Grid View and List View — Your Choice, Saved!
+            </li>
+            <li>📦 Local Storage Support for Persistent View Preferences</li>
+            <li>📱 Fully Responsive and Touch-Optimized for Mobile Devices</li>
+            <li>
+              🔒 Secure Authentication and Protected User Data (via Firebase
+              Auth)
+            </li>
+            <li>⚡ Lightweight, Fast Loading, and Performance Optimized UX</li>
+            <li>
+              📆 Automatic Timestamping: Track Creation and Last Edited Times
+            </li>
+            <li>
+              🎨 Instantly Switch Between 4 Beautiful Themes: Maroon, Mist,
+              Forest, and Peach
+            </li>
+          </ul>
+        </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.heading}>Get Started Today!</h2>
-        <p className={styles.paragraph}>
-          Taskify is free to use. Start managing your tasks today! If you have
-          any feedback, feel free to contact me at {""}
-          <a
-            target="_blank"
-            href="https://santosh-gamma.vercel.app/"
-            className={styles.link}
-          >
-            Personal Portfolio
-          </a>
-          .
-        </p>
-      </section>
-    </div>
+        <section className={styles.blogSection}>
+          <h2>📚 How to Use Taskify</h2>
+
+          <div className={styles.blogCard}>
+            <h3>1. Add Your Tasks Effortlessly</h3>
+            <p>
+              Simply click on the task input field and start typing. Add a title
+              and detailed notes to create new tasks quickly. Save with a click
+              — its that easy!
+            </p>
+            <button>Get Started →</button>
+          </div>
+
+          <div className={styles.blogCard}>
+            <h3>2. Edit and Update On the Go</h3>
+            <p>
+              Tap on any task to open the editing window. Instantly modify the
+              heading or details, and your changes will be saved seamlessly to
+              the cloud.
+            </p>
+            <button>Learn More →</button>
+          </div>
+
+          <div className={styles.blogCard}>
+            <h3>3. Switch Views for Better Organization</h3>
+            <p>
+              Toggle between Grid View and List View depending on your
+              preference. Your choice is automatically saved for next time.
+            </p>
+            <button>Customize View →</button>
+          </div>
+        </section>
+
+        <section className={styles.footer}>
+          <h2>👨‍💻 About the Creator</h2>
+          <p>
+            <strong>Hi i am Santosh Thapa</strong>, a passionate Software
+            Engineer specializing in React.js, Next.js, HTML5, SASS, and modern
+            web technologies. I excel at crafting responsive and visually
+            captivating web interfaces with meticulous attention to detail.
+          </p>
+          <p>
+            Connect with me on{" "}
+            <a
+              href="https://www.linkedin.com/in/santosh986"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn
+            </a>{" "}
+            |{" "}
+            <a
+              href="https://santosh-gamma.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Portfolio
+            </a>
+          </p>
+        </section>
+      </div>
+    </main>
   );
 };
 

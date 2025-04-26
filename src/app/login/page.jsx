@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import {
   createUserWithEmailAndPassword,
@@ -7,8 +7,8 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import styles from "../styles/login.module.scss";
-import { PiEyeLight } from "react-icons/pi";
-import { PiEyeSlashBold } from "react-icons/pi";
+import { IoMdEye } from "react-icons/io";
+import { IoMdEyeOff } from "react-icons/io";
 
 const Login = () => {
   const router = useRouter();
@@ -17,14 +17,14 @@ const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [flip, setFlip] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [flip, setFlip] = useState(false);
+
   const handleToggle = () => {
-    setFlip(true);
+    setFlip((prev) => !prev);
     setTimeout(() => {
-      setIsLogin(!isLogin);
-      setFlip(false);
-    }, 300);
+      setIsLogin((prev) => !prev);
+    }, 200);
   };
 
   const handleEmailAuth = async (event) => {
@@ -40,21 +40,25 @@ const Login = () => {
       }
       router.push("/");
     } catch (error) {
-      console.log("Error code:", error.code);
-      setError("Invalid username or password.");
-    } finally {
+      if (error.code === "auth/email-already-in-use") {
+        setError("Email already in use. You can login.");
+      } else {
+        setError("Invalid email or password.");
+      }
       setLoading(false);
     }
   };
 
   return (
-    <div
-      className={`${styles.loginPage} ${
-        isLogin ? styles.login : styles.signup
-      }`}
-    >
-      <div className={`${styles.container} ${flip ? styles.flip : ""}`}>
+    <div className={styles.loginPage}>
+      <div
+        className={`${styles.container} ${flip ? styles.login : styles.signup}`}
+      >
         <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+        <h2 className={styles.seoHeading}>
+          Taskify - Smart task management app to boost productivity. Track &
+          plan effortlessly. Created by Santosh Thapa.
+        </h2>
         <h3>{isLogin ? "Welcome back!" : "Create Your Account"}</h3>
         <form onSubmit={handleEmailAuth}>
           <input
@@ -72,23 +76,25 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
+              className={styles.passInputCtn}
             />
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword((prev) => !prev)}
               className={styles.eyeButton}
             >
-              {showPassword ? <PiEyeLight /> : <PiEyeSlashBold />}{" "}
+              {showPassword ? <IoMdEye /> : <IoMdEyeOff />}
             </button>
           </div>
-          <button type="submit" disabled={loading}>
+          <button type="submit" disabled={loading} className={styles.submitBtn}>
             {loading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
           </button>
         </form>
         <p className={styles.errorMessage}>{error}</p>
         <p className={styles.toggleText}>
           {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <button onClick={handleToggle} className={styles.toggleButton}>
+          <button onClick={handleToggle} className={styles.linkBtn}>
             {isLogin ? "Sign Up" : "Login"}
           </button>
         </p>
