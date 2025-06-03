@@ -1,6 +1,11 @@
 import "./global.scss";
 import { ThemeProvider } from "./hook/ThemeContext";
-import Sidebar from "./components/sidebar";
+import { Roboto } from "next/font/google";
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+});
 
 const description =
   "Taskify - Smart task management app to boost productivity. Track & plan effortlessly. Created by Santosh Thapa.";
@@ -121,11 +126,8 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      <body>
-        <ThemeProvider>
-          <Sidebar />
-          {children}
-        </ThemeProvider>
+      <body className={roboto.className}>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

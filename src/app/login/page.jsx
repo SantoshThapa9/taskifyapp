@@ -9,7 +9,8 @@ import { useRouter } from "next/navigation";
 import styles from "../styles/login.module.scss";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
-
+import { useTheme } from "../hook/ThemeContext";
+import Link from "next/link";
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -19,6 +20,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [flip, setFlip] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const handleToggle = () => {
     setFlip((prev) => !prev);
@@ -99,6 +101,15 @@ const Login = () => {
             {isLogin ? "Sign Up" : "Login"}
           </button>
         </p>
+        <div className={styles.utilityButtons}>
+          <button onClick={toggleTheme} className={styles.btn}>
+            Theme: {theme}
+          </button>
+
+          <Link className={styles.btn} href="/">
+            Guest
+          </Link>
+        </div>
       </div>
     </div>
   );

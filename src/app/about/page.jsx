@@ -2,125 +2,145 @@
 
 import styles from "../styles/about.module.scss";
 import Link from "next/link";
+import { FaGithub, FaLinkedin, FaGlobe } from "react-icons/fa";
 
 const About = () => {
   return (
     <main className={styles.body}>
       <div className={styles.aboutPage}>
         <section className={styles.hero}>
-          <h1>Welcome to Taskify </h1>
+          <h1>Welcome to Taskify</h1>
           <p>
-            Your comprehensive solution for effective task management and
-            enhanced productivity.
+            Elevate your productivity with our intelligent task management
+            platform. Seamlessly organize, track, and accomplish your goals with
+            style.
           </p>
           <div className={styles.ctaButtons}>
-            <Link href="/">Home</Link>
-            <Link href="/login">Login</Link>
+            <Link href="/">Explore Taskify</Link>
+            <Link href="/login">Get Started</Link>
           </div>
         </section>
 
         <section className={styles.section}>
-          <h2> Why Taskify?</h2>
+          <h2>🎯 Our Mission</h2>
           <p>
-            In todays dynamic environment, staying organized and on top of
-            tasks is crucial. Taskify provides a robust, intuitive, and
-            efficient platform to track your daily tasks, manage complex
-            projects, and achieve your life goals. Leveraging modern
-            technologies such as Next.js, Firebase, and React, Taskify
-            guarantees exceptional performance, security, and scalability.
+            At Taskify, we believe in transforming the way people manage their
+            tasks and achieve their goals. Our platform combines cutting-edge
+            technology with intuitive design to create an experience that not
+            only helps you stay organized but also motivates you to accomplish
+            more.
           </p>
         </section>
 
         <section className={styles.section}>
-          <h2>🚀 Key Features of Taskify</h2>
+          <h2>✨ Why Choose Taskify?</h2>
+          <p>
+            In todays fast-paced world, staying organized isnt just a
+            luxury—it s a necessity. Taskify leverages modern technologies like
+            Next.js, Firebase, and React to deliver a powerful, secure, and
+            scalable platform that adapts to your needs.
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>🚀 Powerful Features</h2>
           <ul>
-            <li>📝 Quick and Seamless Task Creation with Smart Auto-Save</li>
             <li>
-              🔄 Real-Time Sync and Instant Updates via Firebase Firestore
+              <strong>Smart Task Management</strong>
+              <p>
+                Create, organize, and track tasks with intelligent auto-save
+              </p>
             </li>
             <li>
-              ✏️ Edit, Update, and Manage Tasks Effortlessly with Inline Editing
-            </li>
-            <li>🗑️ Single or Bulk Task Deletion with Safety Confirmations</li>
-            <li>
-              📋 Toggle Between Grid View and List View — Your Choice, Saved!
-            </li>
-            <li>📦 Local Storage Support for Persistent View Preferences</li>
-            <li>📱 Fully Responsive and Touch-Optimized for Mobile Devices</li>
-            <li>
-              🔒 Secure Authentication and Protected User Data (via Firebase
-              Auth)
-            </li>
-            <li>⚡ Lightweight, Fast Loading, and Performance Optimized UX</li>
-            <li>
-              📆 Automatic Timestamping: Track Creation and Last Edited Times
+              <strong>Real-Time Sync</strong>
+              <p>Stay updated across all devices with instant Firebase sync</p>
             </li>
             <li>
-              🎨 Instantly Switch Between 4 Beautiful Themes: Maroon, Mist,
-              Forest, and Peach
+              <strong>Intuitive Interface</strong>
+              <p>Effortlessly manage tasks with our user-friendly design</p>
+            </li>
+            <li>
+              <strong>Customizable Views</strong>
+              <p>Switch between Grid and List views to suit your style</p>
+            </li>
+            <li>
+              <strong>Secure Platform</strong>
+              <p>Enterprise-grade security with Firebase Authentication</p>
+            </li>
+            <li>
+              <strong>Theme Options</strong>
+              <p>Choose from 5 beautiful themes to match your preference</p>
             </li>
           </ul>
         </section>
 
         <section className={styles.blogSection}>
-          <h2>📚 How to Use Taskify</h2>
+          <h2>📚 Getting Started with Taskify</h2>
+          <div className={styles.blogGrid}>
+            <div className={styles.blogCard}>
+              <h3>Quick Setup</h3>
+              <p>
+                Create your account in seconds and start organizing your tasks
+                immediately. Our intuitive onboarding process ensures you re up
+                and running in no time.
+              </p>
 
-          <div className={styles.blogCard}>
-            <h3>1. Add Your Tasks Effortlessly</h3>
-            <p>
-              Simply click on the task input field and start typing. Add a title
-              and detailed notes to create new tasks quickly. Save with a click
-              — its that easy!
-            </p>
-            <button>Get Started →</button>
-          </div>
+              <Link href="/login">Create Account →</Link>
+            </div>
 
-          <div className={styles.blogCard}>
-            <h3>2. Edit and Update On the Go</h3>
-            <p>
-              Tap on any task to open the editing window. Instantly modify the
-              heading or details, and your changes will be saved seamlessly to
-              the cloud.
-            </p>
-            <button>Learn More →</button>
-          </div>
+            <div className={styles.blogCard}>
+              <h3>Task Management</h3>
+              <p>
+                Learn how to create, organize, and track your tasks effectively.
+                Discover features like bulk actions, smart sorting, and
+                real-time updates.
+              </p>
+              <a href="https://santosh-gamma.vercel.app/">View Tutorial →</a>
+            </div>
 
-          <div className={styles.blogCard}>
-            <h3>3. Switch Views for Better Organization</h3>
-            <p>
-              Toggle between Grid View and List View depending on your
-              preference. Your choice is automatically saved for next time.
-            </p>
-            <button>Customize View →</button>
+            <div className={styles.blogCard}>
+              <h3>Customization</h3>
+              <p>
+                Personalize your Taskify experience with themes, view
+                preferences, and organization methods that work best for you.
+              </p>
+              <Link href="/">Explore Settings →</Link>
+            </div>
           </div>
         </section>
 
         <section className={styles.footer}>
-          <h2>👨‍💻 About the Creator</h2>
+          <h2>Meet the Creator</h2>
           <p>
-            <strong>Hi i am Santosh Thapa</strong>, a passionate Software
-            Engineer specializing in React.js, Next.js, HTML5, SASS, and modern
-            web technologies. I excel at crafting responsive and visually
-            captivating web interfaces with meticulous attention to detail.
+            Hi, I m <strong>Santosh Thapa</strong> — a passionate Software
+            Engineer dedicated to creating intuitive and powerful web
+            applications. With expertise in React.js, Next.js, and modern web
+            technologies, I strive to build solutions that make a difference in
+            people s daily lives.
           </p>
-          <p>
-            Connect with me on{" "}
+          <div className={styles.socialLinks}>
             <a
               href="https://www.linkedin.com/in/santosh986"
               target="_blank"
               rel="noopener noreferrer"
             >
-              LinkedIn
-            </a>{" "}
-            |{" "}
+              <FaLinkedin /> LinkedIn
+            </a>
             <a
               href="https://santosh-gamma.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Portfolio
+              <FaGlobe /> Portfolio
             </a>
-          </p>
+            <a
+              href="https://github.com/SantoshThapa9"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaGithub /> GitHub
+            </a>
+          </div>
         </section>
       </div>
     </main>

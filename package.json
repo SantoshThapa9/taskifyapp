@@ -2,6 +2,26 @@
   "name": "taskify",
   "version": "0.1.0",
   "private": true,
+  "description": "Taskify - Smart task management app to boost productivity. Track & plan effortlessly. Created by Santosh Thapa.",
+  "author": {
+    "name": "Santosh Thapa",
+    "url": "https://santosh-gamma.vercel.app"
+  },
+  "keywords": [
+    "taskify",
+    "task management",
+    "to-do list",
+    "productivity",
+    "Santosh Thapa",
+    "task app",
+    "next.js",
+    "web app"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SantoshThapa9/taskify"
+  },
+  "homepage": "https://taskifyapp-smoky.vercel.app",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

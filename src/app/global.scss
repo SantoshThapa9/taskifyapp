@@ -2,18 +2,16 @@
   --text-color: #ffffff;
   --background-color: #212121;
   --gradient-color: linear-gradient(135deg, #3a0000, #530000);
-  --gradient-color2: linear-gradient(135deg, #6f2232, #950740);
-  --single-gradient: #640017;
+  --single-gradient: #460010;
   --box-shadow: 0 30px 100px 0 rgba(0, 0, 0, 0.479);
-  --button-shadow: 0 4px 12px rgba(71, 31, 31, 0.3);
+  --button-shadow: 0 4px 12px rgba(32, 1, 1, 0.3);
 }
 
 .Mist {
   --text-color: #222222;
   --background-color: #ffff;
   --gradient-color: linear-gradient(135deg, #e0eafc, #91d9e5);
-  --gradient-color2: linear-gradient(135deg, #c2dbfd, #8cd1e6);
-  --single-gradient: #d4f6ff;
+  --single-gradient: #afdbe7;
   --box-shadow: 0 30px 100px 0 rgba(0, 0, 0, 0.479);
   --button-shadow: 0 4px 8px rgba(88, 115, 138, 0.35);
 }
@@ -21,9 +19,8 @@
 .Forest {
   --text-color: #ffffff;
   --background-color: #212121;
-  --gradient-color: linear-gradient(135deg, #333333, #164630);
-  --gradient-color2: linear-gradient(135deg, #154653, #2a6e50);
-  --single-gradient: #00381f;
+  --gradient-color: linear-gradient(135deg, #29382c, #164630);
+  --single-gradient: #213f31;
   --box-shadow: 0 30px 100px 0 rgba(0, 0, 0, 0.479);
   --button-shadow: 0 4px 9px rgba(29, 54, 45, 0.658);
 }
@@ -31,35 +28,19 @@
 .Peach {
   --text-color: #222222;
   --background-color: #ffff;
-  --gradient-color: linear-gradient(135deg, #a0c4ff, #f9a8d4);
-  --gradient-color2: linear-gradient(135deg, #f9a8d4, #fcd5ce);
-  --single-gradient: #ebc7e1;
+  --gradient-color: linear-gradient(135deg, #a0c4ff, #bdb2ff, #cdb4db);
+  --single-gradient: #c7baf7;
   --box-shadow: 0 30px 100px 0 rgba(0, 0, 0, 0.479);
   --button-shadow: 0 4px 8px rgba(105, 72, 77, 0.3);
 }
 
-@font-face {
-  font-family: "Roboto";
-  src: url("/fonts/Roboto-Light.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Roboto";
-  src: url("/fonts/Roboto-Medium.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Roboto";
-  src: url("/fonts/Roboto-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+.Ocean {
+  --text-color: #ffffff;
+  --background-color: #0a192f;
+  --gradient-color: linear-gradient(135deg, #0a192f, #112240, #233554);
+  --single-gradient: #112240;
+  --box-shadow: 0 30px 100px 0 rgba(0, 0, 0, 0.479);
+  --button-shadow: 0 4px 12px rgba(0, 90, 117, 0.3);
 }
 
 * {
@@ -76,20 +57,18 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 13px;
+  width: 3px;
   position: fixed;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #8b8b8b7e;
-  border-radius: 20px;
-  border: 3px solid transparent;
-  background-clip: content-box;
+  background-color: rgba(128, 128, 128, 0.4);
+  border-radius: 10px;
   &:hover {
-    background-color: #8d8d8d88;
+    background-color: rgba(128, 128, 128, 0.6);
   }
 }
+
 ::-webkit-scrollbar-track {
-  background-color: var(--single-gradient);
-  border-radius: 20px;
+  background-color: transparent;
 }

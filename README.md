@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 Taskify - Task Management App
 
-## Getting Started
+Smart, clean, and intuitive task management tool built with **Next.js** to help you organize your day, boost productivity, and stay focused.  
+Created with 💡 by [Santosh Thapa](https://santosh-gamma.vercel.app)
 
-First, run the development server:
+![Taskify Banner](https://taskifyapp-smoky.vercel.app/taskify.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Live Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+👉 [Visit Taskify](https://taskifyapp-smoky.vercel.app)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📌 Features
 
-To learn more about Next.js, take a look at the following resources:
+✅ Modern UI with theme support  
+✅ Create, edit, and manage tasks easily  
+✅ Persistent state across sessions  
+✅ Responsive design (mobile/tablet/desktop)  
+✅ Accessible and keyboard-navigable  
+✅ Open Graph & SEO metadata  
+✅ Built by following best practices with [Next.js 14+](https://nextjs.org/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tech Stack
 
-## Deploy on Vercel
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Styling**: SCSS / CSS Modules
+- **State Management**: React Context API (ThemeProvider)
+- **Hosting**: [Vercel](https://vercel.com/)
+- **Fonts**: Google Fonts + Pokémon-style Font
+- **SEO**: Custom Open Graph metadata, Twitter Cards, JSON-LD schema
+- **Icons**: Favicon & Apple Touch Icon support
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

@@ -5,30 +5,34 @@ import { auth, db } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
-  addDoc,
+  setDoc,
   onSnapshot,
   deleteDoc,
   updateDoc,
   doc,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import styles from "./styles/taskify.module.scss";
 import NavBar from "./components/NavBar";
 import clsx from "clsx";
 import { MdDataSaverOn } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-import { useRouter } from "next/navigation";
+import { FiSearch } from "react-icons/fi";
+import { IoClose } from "react-icons/io5";
 
 const Taskify = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [taskDetail, setTaskDetail] = useState("");
   const [taskHeading, setTaskHeading] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isTakingInput, SetIsTakingInput] = useState(false);
   const [taskWindowOn, setTaskWindowOn] = useState(null);
   const unsubscribeRef = useRef(null);
   const [editedHeading, setEditedHeading] = useState("");
   const [editedDetail, setEditedDetail] = useState("");
+  const [isOnline, setIsOnline] = useState(true);
   const [isListView, setIsListView] = useState(() => {
     const savedView = localStorage.getItem("isListView");
     return savedView ? JSON.parse(savedView) : false;
@@ -36,30 +40,85 @@ const Taskify = () => {
 
   const taskWindowRef = useRef(null);
 
-  const router = useRouter();
+  // Add online/offline detection
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+    setIsOnline(navigator.onLine);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  // Sync local tasks with Firebase when coming back online
+  useEffect(() => {
+    const syncTasksWithFirebase = async () => {
+      const userId = auth.currentUser?.uid;
+      if (isOnline && userId) {
+        const localTasks = JSON.parse(
+          localStorage.getItem("guestTasks") || "[]"
+        );
+        for (const task of localTasks) {
+          const taskRef = doc(db, `users/${userId}/tasks`, task.id);
+          const existing = await getDoc(taskRef);
+
+          if (!existing.exists()) {
+            await setDoc(taskRef, task);
+          }
+        }
+      }
+    };
+
+    syncTasksWithFirebase();
+  }, [isOnline]);
 
   const addTask = async () => {
     const heading = textareaRef.current?.value.trim() || "";
     const detail = textareaRef2.current?.value.trim() || "";
 
     if (!heading && !detail) return;
+
     const userId = auth.currentUser?.uid;
-    if (!userId) {
-      if (window.confirm("Please Sign-in to Add Tasks")) router.push("/login");
-      return;
-    }
+
     setTaskDetail("");
     setTaskHeading("");
     SetIsTakingInput(false);
 
     const newTask = {
+      id: crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`,
       heading,
       detail,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       updatedAt: null,
       userId,
     };
-    await addDoc(collection(db, `users/${userId}/tasks`), newTask);
+
+    // Always save to local storage
+    const localTasks = JSON.parse(localStorage.getItem("guestTasks") || "[]");
+    localStorage.setItem(
+      "guestTasks",
+      JSON.stringify([newTask, ...localTasks])
+    );
+    setTasks([newTask, ...tasks]);
+
+    // If online and logged in, save to Firebase
+    if (isOnline && userId) {
+      try {
+        // await addDoc(collection(db, `users/${userId}/tasks`), newTask);
+        const taskRef = doc(db, `users/${userId}/tasks`, newTask.id);
+        await setDoc(taskRef, newTask); // You need to import `setDoc` from Firestore
+
+        const updatedLocalTasks = localTasks.filter((t) => t.id !== newTask.id);
+        localStorage.setItem("guestTasks", JSON.stringify(updatedLocalTasks));
+      } catch (error) {
+        console.error("Error saving to Firebase:", error);
+      }
+    }
   };
 
   const openTaskWindow = (taskId) => {
@@ -73,21 +132,52 @@ const Taskify = () => {
 
   const closeTaskWindow = async () => {
     const userId = auth.currentUser?.uid;
-    if (userId && taskWindowOn?.id) {
-      setTaskWindowOn(null);
-      const taskRef = doc(db, `users/${userId}/tasks`, taskWindowOn.id);
-      if (
-        editedHeading !== taskWindowOn.heading ||
-        editedDetail !== taskWindowOn.detail
-      ) {
-        await updateDoc(taskRef, {
-          heading: editedHeading,
-          detail: editedDetail,
-          updatedAt: new Date(),
-          createdAt: null,
-        });
+    if (!taskWindowOn) return;
+
+    const hasChanges =
+      editedHeading !== taskWindowOn.heading ||
+      editedDetail !== taskWindowOn.detail;
+
+    if (hasChanges) {
+      const updatedTask = {
+        ...taskWindowOn,
+        heading: editedHeading,
+        detail: editedDetail,
+        updatedAt: new Date().toISOString(),
+        createdAt: null,
+      };
+
+      setTasks(tasks.map((t) => (t.id === taskWindowOn.id ? updatedTask : t)));
+
+      const localTasks = JSON.parse(localStorage.getItem("guestTasks") || "[]");
+      const updatedLocalTasks = localTasks.map((t) =>
+        t.id === taskWindowOn.id ? updatedTask : t
+      );
+      localStorage.setItem("guestTasks", JSON.stringify(updatedLocalTasks));
+
+      if (isOnline && userId) {
+        try {
+          const taskRef = doc(db, `users/${userId}/tasks`, taskWindowOn.id);
+          const snapshot = await getDoc(taskRef);
+
+          if (snapshot.exists()) {
+            await updateDoc(taskRef, {
+              heading: editedHeading,
+              detail: editedDetail,
+              updatedAt: new Date(),
+              createdAt: null,
+            });
+          } else {
+            // Document doesn't exist, so we create it instead
+            await setDoc(taskRef, updatedTask);
+          }
+        } catch (error) {
+          console.error("Error updating or setting in Firebase:", error);
+        }
       }
     }
+
+    setTaskWindowOn(null);
   };
 
   useEffect(() => {
@@ -109,6 +199,7 @@ const Taskify = () => {
   }, [taskWindowOn, editedDetail, editedHeading, closeTaskWindow]);
 
   const inputCtnRef = useRef(null);
+
   useEffect(() => {
     if (!isTakingInput) return;
     const closeInputCtn = (event) => {
@@ -153,63 +244,133 @@ const Taskify = () => {
     localStorage.setItem("isListView", JSON.stringify(isListView));
   }, [isListView]);
 
-  const getData = () => {
+  const getData = async () => {
     setLoading(true);
-    setTimeout(() => {
-      if (unsubscribeRef.current) {
-        unsubscribeRef.current();
+
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+    }
+
+    const localTasks = JSON.parse(localStorage.getItem("guestTasks") || "[]");
+    setTasks(localTasks);
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (!user || !isOnline) {
+        setLoading(false);
+        setTasks(localTasks);
+        if (unsubscribeRef.current) {
+          unsubscribeRef.current();
+          unsubscribeRef.current = null;
+        }
+        return;
+      }
+      try {
+        for (const task of localTasks) {
+          const taskRef = doc(db, `users/${user.uid}/tasks`, task.id);
+          const existing = getDoc(taskRef);
+          // if (!existing.exists()) {
+          //   setDoc(taskRef, task);
+          // }
+        }
+        localStorage.setItem("guestTasks", "[]"); // Clear synced guest tasks
+      } catch (error) {
+        console.error("Error syncing guest tasks to Firebase:", error);
       }
 
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          setTasks([]);
-          setLoading(false);
-          return;
-        }
-
+      try {
         const tasksRef = collection(db, `users/${user.uid}/tasks`);
-        const unsubscribe = onSnapshot(tasksRef, (snapshot) => {
-          setTasks(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-          setLoading(false);
-        });
+        const unsubscribe = onSnapshot(
+          tasksRef,
+          (snapshot) => {
+            const firebaseTasks = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setTasks(firebaseTasks);
+            setLoading(false);
+          },
+          (error) => {
+            // Handle any errors from the snapshot listener
+            console.log("Firestore snapshot error:", error);
+            setTasks(localTasks);
+            setLoading(false);
+          }
+        );
 
         unsubscribeRef.current = unsubscribe;
-      });
-    }, 600);
-  };
+      } catch (err) {
+        console.error("Unexpected error in Firestore onSnapshot:", err);
+        setTasks(localTasks);
+        setLoading(false);
+      }
+    });
 
-  useEffect(() => {
-    getData();
+    // Return a cleanup function that unsubscribes from both listeners
     return () => {
+      unsubscribeAuth();
       if (unsubscribeRef.current) {
         unsubscribeRef.current();
       }
     };
+  };
+
+  useEffect(() => {
+    getData();
+    // return () => {
+    //   if (unsubscribe) {
+    //     unsubscribe();
+    //   }
+    // };
   }, []);
 
   const deleteTask = async (taskId) => {
     closeTaskWindow();
     const userId = auth.currentUser?.uid;
-    if (userId) await deleteDoc(doc(db, `users/${userId}/tasks`, taskId));
+
+    // Remove from local state
+    setTasks(tasks.filter((t) => t.id !== taskId));
+
+    // Remove from localStorage
+    const localTasks = JSON.parse(localStorage.getItem("guestTasks") || "[]");
+    const updatedLocalTasks = localTasks.filter((t) => t.id !== taskId);
+    localStorage.setItem("guestTasks", JSON.stringify(updatedLocalTasks));
+
+    // If online and logged in, delete from Firebase
+    if (isOnline && userId) {
+      try {
+        await deleteDoc(doc(db, `users/${userId}/tasks`, taskId));
+      } catch (error) {
+        console.error("Error deleting from Firebase:", error);
+      }
+    }
   };
 
   const deleteAllTasks = async () => {
     const userId = auth.currentUser?.uid;
-    if (!userId) return;
-
     const confirmDelete = window.confirm(
       "Are you sure you want to delete all tasks?"
     );
     if (!confirmDelete) return;
 
-    const tasksRef = collection(db, `users/${userId}/tasks`);
-    const snapshot = await getDocs(tasksRef);
+    // Clear local state
+    setTasks([]);
 
-    const deletePromises = snapshot.docs.map((docItem) =>
-      deleteDoc(doc(db, `users/${userId}/tasks`, docItem.id))
-    );
+    // Clear localStorage
+    localStorage.setItem("guestTasks", "[]");
 
-    await Promise.all(deletePromises);
+    // If online and logged in, clear Firebase
+    if (isOnline && userId) {
+      try {
+        const tasksRef = collection(db, `users/${userId}/tasks`);
+        const snapshot = await getDocs(tasksRef);
+        const deletePromises = snapshot.docs.map((docItem) =>
+          deleteDoc(doc(db, `users/${userId}/tasks`, docItem.id))
+        );
+        await Promise.all(deletePromises);
+      } catch (error) {
+        console.error("Error deleting all tasks from Firebase:", error);
+      }
+    }
   };
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 480;
@@ -218,23 +379,37 @@ const Taskify = () => {
   const detailLimit = isMobile ? 150 : 500;
 
   const formatDate = (date) => {
-    const formattedDate = date instanceof Date ? date : new Date(date);
+    try {
+      if (date?.toDate) {
+        date = date.toDate(); // Firebase Timestamp
+      } else if (typeof date === "string") {
+        date = new Date(date); // ISO String
+      }
 
-    if (isNaN(formattedDate.getTime())) {
-      // Check if it's a valid date
+      if (!(date instanceof Date) || isNaN(date.getTime())) {
+        return "Invalid Date";
+      }
+
+      return date.toLocaleString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } catch {
       return "Invalid Date";
     }
-
-    return formattedDate.toLocaleString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
   };
+
+  const filteredTasks = tasks.filter((task) => {
+    const searchLower = searchQuery.toLowerCase();
+    const headingMatch = task.heading?.toLowerCase().includes(searchLower);
+    const detailMatch = task.detail?.toLowerCase().includes(searchLower);
+    return searchLower === "" || headingMatch || detailMatch;
+  });
 
   return (
     <main className={styles.body}>
@@ -279,21 +454,28 @@ const Taskify = () => {
               }}
             />
           </div>
-          <div className={styles.box2} onClick={addTask}>
-            <MdDataSaverOn />
-          </div>
+          <MdDataSaverOn onClick={addTask} className={styles.addBtn} />
+        </div>
+        <div className={clsx(styles.searchCtn, isTakingInput && styles.hidden)}>
+          <input
+            type="text"
+            placeholder="Search tasks..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <FiSearch className={styles.searchIcon} />
         </div>
       </div>
       {loading ? (
         <span className={styles.loader} />
-      ) : tasks.length !== 0 ? (
+      ) : filteredTasks.length > 0 ? (
         <div
           className={clsx(
             styles.taskParentCtn,
             isListView ? styles.listView : styles.gridView
           )}
         >
-          {tasks
+          {filteredTasks
             .sort((a, b) => {
               const dateA = a.createdAt?.toDate
                 ? a.createdAt.toDate()
@@ -325,63 +507,79 @@ const Taskify = () => {
                         : task.detail
                       : ""}
                   </p>
-
-                  {taskWindowOn?.id === task.id && (
-                    <div
-                      ref={taskWindowRef}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      className={styles.taskWindow}
-                    >
-                      <div className={styles.textareaCtn}>
-                        <textarea
-                          rows={1}
-                          ref={textareaRef3}
-                          type="text"
-                          value={editedHeading}
-                          onChange={(e) => setEditedHeading(e.target.value)}
-                          className={styles.heading}
-                          placeholder="Title"
-                        />
-                        <textarea
-                          rows={1}
-                          ref={textareaRef4}
-                          value={editedDetail}
-                          onChange={(e) => setEditedDetail(e.target.value)}
-                          className={styles.detail}
-                          placeholder="Enter task details"
-                        />
-                      </div>
-                      <div className={styles.windowCtn2}>
-                        <div
-                          className={styles.CtnChild}
-                          onClick={() => deleteTask(task.id)}
-                        >
-                          <MdDelete />
-                        </div>
-                        <span>
-                          {task.updatedAt
-                            ? `Edited: ${formatDate(task.updatedAt.toDate())}`
-                            : `Created: ${formatDate(task.createdAt.toDate())}`}
-                        </span>
-
-                        <div
-                          className={styles.CtnChild}
-                          onClick={() => closeTaskWindow()}
-                        >
-                          <MdDataSaverOn />
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
         </div>
       ) : (
-        <span style={{ marginTop: "10dvh" }}>No tasks available</span>
+        <div style={{ marginTop: "240px" }}>
+          {searchQuery ? "No matching tasks found" : "No tasks available"}
+        </div>
       )}
+      {taskWindowOn && (
+        <div
+          ref={taskWindowRef}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          className={styles.taskWindow}
+        >
+          <div className={styles.taskWindowHeader}>
+            <h4>Taskify</h4>
+            <div className={styles.closeBtn} onClick={() => closeTaskWindow()}>
+              <IoClose />
+            </div>
+          </div>
+          <div className={styles.textareaCtn}>
+            <textarea
+              rows={1}
+              ref={textareaRef3}
+              type="text"
+              value={editedHeading}
+              onChange={(e) => setEditedHeading(e.target.value)}
+              className={styles.heading}
+              placeholder="Title"
+            />
+            <textarea
+              rows={1}
+              ref={textareaRef4}
+              value={editedDetail}
+              onChange={(e) => setEditedDetail(e.target.value)}
+              className={styles.detail}
+              placeholder="Enter task details"
+            />
+          </div>
+          <div className={styles.windowCtn2}>
+            <div
+              className={styles.CtnChild}
+              onClick={() => deleteTask(taskWindowOn.id)}
+            >
+              <MdDelete />
+            </div>
+            <span>
+              {taskWindowOn.updatedAt
+                ? `Edited: ${formatDate(taskWindowOn.updatedAt)}`
+                : `Created: ${formatDate(taskWindowOn.createdAt)}`}
+            </span>
+            <div className={styles.CtnChild} onClick={() => closeTaskWindow()}>
+              <MdDataSaverOn />
+            </div>
+          </div>
+        </div>
+      )}
+      <footer className={styles.appFooter}>
+        <p>
+          © 2024 Taskify - Created by{" "}
+          <a
+            href="https://santosh-gamma.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.portfolioLink}
+          >
+            Santosh Thapa
+          </a>
+        </p>
+      </footer>
     </main>
   );
 };

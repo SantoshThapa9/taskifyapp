@@ -3,14 +3,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
-const themes = ["Maroon", "Mist", "Forest", "Peach"];
+const themes = ["Ocean", "Maroon", "Mist", "Forest", "Peach"];
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("theme");
-      const initialTheme = themes.includes(stored) ? stored : "Peach";
+      const initialTheme = themes.includes(stored) ? stored : "Ocean";
       setTheme(initialTheme);
       document.documentElement.classList.add(initialTheme);
     }
